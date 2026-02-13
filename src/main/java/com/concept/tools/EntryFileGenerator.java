@@ -1,4 +1,4 @@
-package com.concept.utils;
+package com.concept.tools;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.util.UUID;
 
+/**
+ * Tool for generating an EntryFile with random contents.
+ */
 public class EntryFileGenerator {
 
     private static final Path ENTRY_FILE_NAME = Path.of("./EntryFile.txt");

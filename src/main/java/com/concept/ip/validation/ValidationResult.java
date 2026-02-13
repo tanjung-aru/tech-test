@@ -1,6 +1,6 @@
 package com.concept.ip.validation;
 
-import com.concept.ip.IpInfo;
+import com.concept.ip.rest.IpInfo;
 
 public sealed interface ValidationResult {
 
@@ -18,7 +18,7 @@ public sealed interface ValidationResult {
         return new Success(ipInfo, "");
     }
 
-    static ValidationResult failure(IpInfo ipInfo, String message) {
+    static ValidationResult blocked(IpInfo ipInfo, String message) {
         return new Blocked(ipInfo, message);
     }
 

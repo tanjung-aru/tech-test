@@ -1,4 +1,4 @@
-package com.concept.ip;
+package com.concept.ip.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

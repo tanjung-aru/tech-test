@@ -6,5 +6,5 @@ import java.nio.file.Path;
 
 public interface FileProcessor {
 
-    Path processInputStream(InputStream inputStream, String requestId) throws IOException;
+    Path process(InputStream inputStream, String requestId) throws IOException;
 }

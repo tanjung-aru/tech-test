@@ -1,7 +1,7 @@
 package com.concept.ip.validation;
 
-import com.concept.ip.IpInfo;
-import com.concept.ip.IpLookup;
+import com.concept.ip.rest.IpInfo;
+import com.concept.ip.rest.IpLookup;
 import com.concept.ip.validation.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class IpAddressValidation {
         for (var validator : validators) {
             final Optional<String> optionalError = validator.validate(ipInfo);
             if (optionalError.isPresent()) {
-                return ValidationResult.failure(ipInfo, optionalError.get());
+                return ValidationResult.blocked(ipInfo, optionalError.get());
             }
         }
         return ValidationResult.success(ipInfo);

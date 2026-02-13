@@ -1,6 +1,7 @@
-package com.concept.ip;
+package com.concept.ip.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,18 +15,21 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class IpLookup {
 
-    private static final String BASE_URL = "http://ip-api.com/json/";
     private static final String QUERY_PARAMS = "?fields=" + URLEncoder.encode("countryCode,isp", StandardCharsets.UTF_8);
     private final HttpClient client = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
+    private final String urlBase;
+
+    public IpLookup(@Value("${iplookup.url:http://ip-api.com/json/}") String urlBase) {
+        this.urlBase = urlBase;
+    }
 
     public IpInfo getIpInfo(String ipAddress) throws IOException, InterruptedException {
 
         final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + ipAddress + QUERY_PARAMS))
+                .uri(URI.create(urlBase + ipAddress + QUERY_PARAMS))
                 .GET()
                 .build();
-
 
         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 

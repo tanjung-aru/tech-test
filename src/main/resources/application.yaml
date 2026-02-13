@@ -29,6 +29,10 @@ csv:
   validation:
     enabled: true
 
+outcome-file:
+  json:
+    fields: Name, Transport, Top Speed
+
 files:
   upload:
     save-file: true

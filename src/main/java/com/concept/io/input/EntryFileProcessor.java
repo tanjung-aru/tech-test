@@ -19,9 +19,7 @@ import java.util.Set;
 @Component
 public class EntryFileProcessor implements FileProcessor {
 
-    private static final Set<String> CSV_HEADER = new LinkedHashSet<>(List.of("UUID", "ID", "Name", "Likes", "Transport", "Avg Speed", "Top Speed"));
-    private static final Set<String> FIELDS_TO_WRITE = Set.of( "Name", "Transport", "Top Speed");
-    private static final Set<String> FIELDS_TO_EXCLUDE;
+    static final Set<String> CSV_HEADER = new LinkedHashSet<>(List.of("UUID", "ID", "Name", "Likes", "Transport", "Avg Speed", "Top Speed"));
     private static final CsvMapper CSV_MAPPER;
     private static final CsvSchema CSV_SCHEMA;
     private final boolean validationEnabled;
@@ -32,8 +30,6 @@ public class EntryFileProcessor implements FileProcessor {
         final CsvSchema.Builder builder = CsvSchema.builder();
         CSV_HEADER.forEach(builder::addColumn);
         CSV_SCHEMA = builder.setColumnSeparator('|').build();
-        FIELDS_TO_EXCLUDE = new LinkedHashSet<>(CSV_HEADER);
-        FIELDS_TO_EXCLUDE.removeAll(FIELDS_TO_WRITE);
     }
 
     public EntryFileProcessor(@Value("${csv.validation.enabled:true}") boolean validationEnabled, OutcomeWriterFactory<Entry> writerFactory) {
@@ -54,9 +50,9 @@ public class EntryFileProcessor implements FileProcessor {
     }
 
     @Override
-    public Path processInputStream(InputStream inputStream, String requestId) throws IOException {
+    public Path process(InputStream inputStream, String requestId) throws IOException {
         try(var csvReader = CSV_MAPPER.readerFor(Entry.class).with(CSV_SCHEMA).createParser(inputStream);
-            var outcomeWriter = writerFactory.createJsonWriter(requestId, FIELDS_TO_EXCLUDE)) {
+            var outcomeWriter = writerFactory.createJsonWriter(requestId, CSV_HEADER)) {
             while (csvReader.nextToken() != null) {
                 Entry entry;
                 try {
@@ -66,7 +62,7 @@ public class EntryFileProcessor implements FileProcessor {
                         final String errorMessage =
                                 String.format("Error parsing text=\"%s\" on line=%s for requestId=%s",
                                 csvReader.getText(), csvReader.currentLocation().getLineNr()-1, requestId);
-                        throw new IOException(errorMessage, e); // Fail-fast on validation errors.
+                        throw new ValidationException(errorMessage, e); // Fail-fast on validation errors.
                     }
                     continue;
                 }

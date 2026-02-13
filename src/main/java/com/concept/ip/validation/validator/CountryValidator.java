@@ -1,13 +1,13 @@
 package com.concept.ip.validation.validator;
 
-import com.concept.ip.IpInfo;
+import com.concept.ip.rest.IpInfo;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @ConfigurationProperties(prefix = "client.country")
-public record CountryValidator(List<String> blacklist) implements Validator {
+public record CountryValidator(Set<String> blacklist) implements Validator {
 
     @Override
     public Optional<String> validate(IpInfo ipInfo) {

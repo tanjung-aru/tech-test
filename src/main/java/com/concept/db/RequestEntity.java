@@ -5,12 +5,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "request")
+@Getter @Setter
 public class RequestEntity {
 
     @Id
@@ -20,16 +23,18 @@ public class RequestEntity {
     private String uri;
     private LocalDateTime timestamp;
     private int httpStatus;
+    private String requestIpAddress;
     private String countryCode;
     private String isp;
     private long elapsedTimeMs;
 
-    public RequestEntity(String requestId, String uri, LocalDateTime timestamp, int httpStatus,
+    public RequestEntity(String requestId, String uri, LocalDateTime timestamp, int httpStatus, String requestIpAddress,
                          String countryCode, String isp, long elapsedTimeMs) {
         this.requestId = requestId;
         this.uri = uri;
         this.timestamp = timestamp;
         this.httpStatus = httpStatus;
+        this.requestIpAddress = requestIpAddress;
         this.countryCode = countryCode;
         this.isp = isp;
         this.elapsedTimeMs = elapsedTimeMs;

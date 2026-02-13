@@ -1,6 +1,6 @@
 package com.concept.ip.validation.validator;
 
-import com.concept.ip.IpInfo;
+import com.concept.ip.rest.IpInfo;
 
 import java.util.Optional;
 
