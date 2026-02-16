@@ -2,6 +2,7 @@ package com.concept;
 
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -20,7 +21,7 @@ public class EntryFileWithoutValidationIT extends BaseIT {
     @Test
     public void assert_that_csv_returns_expected_json_and_is_OK() throws Exception {
 
-        configureIpLookupResponse("""
+        String ipAddress = configureIpLookupResponse("""
                 {
                   "countryCode": "GB",
                   "isp": "IBM"
@@ -46,5 +47,7 @@ public class EntryFileWithoutValidationIT extends BaseIT {
                 """;
 
         JSONAssert.assertEquals(expectedJson, resultActions.getResponse().getContentAsString(), false);
+
+        assertDatabaseEntry("GB", "IBM", HttpStatus.OK, ipAddress);
     }
 }

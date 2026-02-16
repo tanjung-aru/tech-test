@@ -16,6 +16,10 @@ Many properties are configurable in `application.yaml`.
 
 `com.concept.tools.EntryFileGenerator` is a tool for generating a dummy CSV file for testing purposes, e.g. with Postman.
 
+## Database
+
+Configured to use H2 in memory database for demonstration.
+
 ## Thoughts for future changes
 
 - The IP address obtained in the controller may not be that of the end user, if a reverse proxy is used. Would need to inspect request headers, e.g. X-Forwarded-For

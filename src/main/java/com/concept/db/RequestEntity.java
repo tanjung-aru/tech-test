@@ -28,6 +28,8 @@ public class RequestEntity {
     private String isp;
     private long elapsedTimeMs;
 
+    public RequestEntity() {}
+
     public RequestEntity(String requestId, String uri, LocalDateTime timestamp, int httpStatus, String requestIpAddress,
                          String countryCode, String isp, long elapsedTimeMs) {
         this.requestId = requestId;

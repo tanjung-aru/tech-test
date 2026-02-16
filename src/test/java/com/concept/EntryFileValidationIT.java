@@ -2,6 +2,7 @@ package com.concept;
 
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -14,7 +15,7 @@ public class EntryFileValidationIT extends BaseIT {
     @Test
     public void assert_that_csv_returns_expected_json_and_is_OK() throws Exception {
 
-        configureIpLookupResponse("""
+        String ipAddress = configureIpLookupResponse("""
                 {
                   "countryCode": "GB",
                   "isp": "IBM"
@@ -39,12 +40,14 @@ public class EntryFileValidationIT extends BaseIT {
                 """;
 
         JSONAssert.assertEquals(expectedJson, resultActions.getResponse().getContentAsString(), false);
+
+        assertDatabaseEntry("GB", "IBM", HttpStatus.OK, ipAddress);
     }
 
     @Test
     public void assert_that_country_code_is_FORBIDDEN() throws Exception {
 
-        configureIpLookupResponse("""
+        String ipAddress = configureIpLookupResponse("""
                 {
                   "countryCode": "US",
                   "isp": "IBM"
@@ -56,12 +59,14 @@ public class EntryFileValidationIT extends BaseIT {
         mockMvc.perform(multipart("/api/upload-entry-file").file(file))
                 .andExpect(status().isForbidden())
                 .andExpect(content().string("Country is blacklisted: US"));
+
+        assertDatabaseEntry("US", "IBM", HttpStatus.FORBIDDEN, ipAddress);
     }
 
     @Test
     public void assert_that_isp_is_FORBIDDEN() throws Exception {
 
-        configureIpLookupResponse("""
+        String ipAddress = configureIpLookupResponse("""
                 {
                   "countryCode": "GB",
                   "isp": "AWS"
@@ -73,5 +78,7 @@ public class EntryFileValidationIT extends BaseIT {
         mockMvc.perform(multipart("/api/upload-entry-file").file(file))
                 .andExpect(status().isForbidden())
                 .andExpect(content().string("ISP is blacklisted: AWS"));
+
+        assertDatabaseEntry("GB", "AWS", HttpStatus.FORBIDDEN, ipAddress);
     }
 }
